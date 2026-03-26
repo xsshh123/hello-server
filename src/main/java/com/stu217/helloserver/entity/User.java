@@ -1,6 +1,10 @@
 package com.stu217.helloserver.entity;
-
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+@TableName("sys_user")
 public class User {
+    @TableId(type = IdType.AUTO) // 主键自增，与数据库表对应
     private String name;
     private Long id;
     private Integer age;

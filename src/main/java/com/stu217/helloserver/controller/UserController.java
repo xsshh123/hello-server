@@ -1,17 +1,35 @@
 package com.stu217.helloserver.controller;
 import com.stu217.helloserver.common.Result;
 import com.stu217.helloserver.entity.User;
+import com.stu217.helloserver.dto.UserDTO;
+import com.stu217.helloserver.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController // 标记为REST风格控制器
 @RequestMapping("/api/users") // 基础路径
 public class UserController {
-    // 1. 查：根据ID获取用户信息 - 使用@PathVariable从路径取参数
-    @GetMapping("/{id}") // 接口路径：基础路径+/{id}，如/api/users/1001
-    public Result<String> getUser(@PathVariable("id") Long id) {
-        String data="查询成功,正在返回ID为" + id + "的用户信息";
-        return Result.success(data);
+    @Autowired
+    private UserService userService;
+    @PostMapping
+    public Result<String> register(@RequestBody UserDTO userDTO) {
+        // 调用Service层的注册方法
+        return userService.register(userDTO);
     }
+    // 2. 用户登录接口：POST /api/users/login
+    @PostMapping("/login")
+    public Result<String> login(@RequestBody UserDTO userDTO) {
+        // 调用Service层的登录方法
+        return userService.login(userDTO);
+    }
+    // 3. 测试查询接口：GET /api/users/{id}（用于后续拦截器测试）
+    @GetMapping("/{id}")
+    public Result<String> getUser(@PathVariable("id") Long id) {
+        return Result.success("查询成功，正在返回ID为" + id + "的用户信息");
+    }
+
+
 
     // 2. 增：新增用户 - 使用@RequestBody接收JSON请求体
     @PostMapping // 接口路径：基础路径，无额外拼接
@@ -33,9 +51,5 @@ public class UserController {
         String data="删除成功,已移除ID为" + id + "的用户";
         return Result.success(data);
     }
-    @PostMapping("/login")
-    public Result<String> login() {
-        String data = "登录成功，生成有效Token";
-        return Result.success(data);
-    }
+
 }
