@@ -11,10 +11,12 @@ public class AuthInterceptor implements HandlerInterceptor {
         String uri = request.getRequestURI();
         // 规则A：POST请求 + 路径精确等于/api/users → 放行（用户注册，无需鉴权）
         boolean isCreateUser = "POST".equalsIgnoreCase(method) && "/api/users".equals(uri);
+        //规则c：GET请求 + 路径以/api/users/login → 放行（用户登录，无需鉴权）
+        boolean isLogin = "POST".equalsIgnoreCase(method) && "/api/users/login".equals(uri);
         // 规则B：GET请求 + 路径以/api/users/开头 → 放行（查询单个用户，无需鉴权）
         boolean isGetUser = "GET".equalsIgnoreCase(method) && uri.startsWith("/api/users/");
         // 3. 满足任一放行规则，直接放行，无需校验Token
-        if (isCreateUser || isGetUser) {
+        if (isCreateUser || isLogin) {
             return true;
         }
         // 1. 从HTTP请求头中获取名为Authorization的令牌

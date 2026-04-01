@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
             return Result.error(ResultCode.PASSWORD_ERROR); // 返回密码错误异常
         }
         // 3. 登录成功，后续可在此生成Token（本步骤暂略，测试阶段可返回"登录成功"）
-        return Result.success("登录成功");
+        String token = UUID.randomUUID().toString();
+        return Result.success(token);
     }
 }
