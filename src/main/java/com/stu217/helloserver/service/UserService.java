@@ -9,4 +9,5 @@ public interface UserService {
     Result<String> register(UserDTO userDTO);
     // 用户登录方法
     Result<String> login(UserDTO userDTO);
+    Result<String> getUserById(Long id);
 }
