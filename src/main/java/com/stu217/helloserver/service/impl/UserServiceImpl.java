@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             return Result.error(USER_NOT_EXIST);
         }
-        return Result.success(user.toString());
+        return Result.success("查询成功：" +user.toString());
     }
 }
 

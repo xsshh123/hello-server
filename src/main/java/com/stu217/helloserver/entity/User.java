@@ -5,22 +5,19 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @TableName("sys_user")
 public class User {
     @TableId(type = IdType.AUTO) // 主键自增，与数据库表对应
-    private String name;
+    //private String name;
     private Long id;
-    private Integer age;
+    //private Integer age;
     private String username;
     private String password;
-    public User(String name, Long id, Integer age) {
-        this.name = name;
-        this.id = id;
-        this.age = age;
-    }
 
     public User() {
     }
 
-    public String getName() {
-        return name;
+    public User(Long id, String password, String username) {
+        this.id = id;
+        this.password = password;
+        this.username = username;
     }
 
     public String getUsername() {
@@ -39,9 +36,6 @@ public class User {
         this.password = password;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Long getId() {
         return id;
@@ -51,11 +45,5 @@ public class User {
         this.id = id;
     }
 
-    public Integer getAge() {
-        return age;
-    }
 
-    public void setAge(Integer age) {
-        this.age = age;
-    }
 }
