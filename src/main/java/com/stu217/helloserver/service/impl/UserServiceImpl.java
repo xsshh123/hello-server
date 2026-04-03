@@ -1,40 +1,78 @@
 package com.stu217.helloserver.service.impl;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.stu217.helloserver.common.Result;
 import com.stu217.helloserver.common.ResultCode;
 import com.stu217.helloserver.dto.UserDTO;
+import com.stu217.helloserver.entity.User;
+import com.stu217.helloserver.mapper.UserMapper;
 import com.stu217.helloserver.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static com.stu217.helloserver.common.ResultCode.USER_NOT_EXIST;
+
 @Service
 public class UserServiceImpl implements UserService {
-    // 静态Map模拟数据库，key=用户名，value=密码
-    private static final Map<String, String> userDb = new HashMap<>();
 
+    @Autowired
+    private UserMapper userMapper;
+
+    // 注册
     @Override
     public Result<String> register(UserDTO userDTO) {
-        // 1. 校验用户名是否已存在
-        if (userDb.containsKey(userDTO.getUsername())) {
-            return Result.error(ResultCode.USER_HAS_EXISTED); // 返回已注册异常
+        // 1. 判断用户名是否存在
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUsername, userDTO.getUsername());
+        User dbUser = userMapper.selectOne(queryWrapper);
+
+        if (dbUser != null) {
+            return Result.error(ResultCode.USER_HAS_EXISTED);
         }
-        // 2. 不存在则存入模拟数据库
-        userDb.put(userDTO.getUsername(), userDTO.getPassword());
-        return Result.success("注册成功"); // 返回成功结果
+
+        // 2. 插入数据库
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword());
+        userMapper.insert(user);
+
+        return Result.success("注册成功！");
     }
+
+    // 登录
     @Override
     public Result<String> login(UserDTO userDTO) {
-        // 1. 校验用户名是否存在
-        if (!userDb.containsKey(userDTO.getUsername())) {
-            return Result.error(ResultCode.USER_NOT_EXIST); // 返回用户不存在异常
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getUsername, userDTO.getUsername());
+        User dbUser = userMapper.selectOne(queryWrapper);
+
+        // 用户不存在
+        if (dbUser == null) {
+            return Result.error(USER_NOT_EXIST);
         }
+
         // 2. 校验密码是否正确
-        String dbPassword = userDb.get(userDTO.getUsername());
-        if (!dbPassword.equals(userDTO.getPassword())) {
-            return Result.error(ResultCode.PASSWORD_ERROR); // 返回密码错误异常
+        if (!dbUser.getPassword().equals(userDTO.getPassword())) {
+            return Result.error(ResultCode.PASSWORD_ERROR);
         }
         // 3. 登录成功，后续可在此生成Token（本步骤暂略，测试阶段可返回"登录成功"）
         String token = UUID.randomUUID().toString();
         return Result.success(token);
+
+    }
+
+    // 根据ID查询
+    @Override
+    public Result<String> getUserById(Long id) {
+        User user = userMapper.selectById(id);
+        if (user == null) {
+            return Result.error(USER_NOT_EXIST);
+        }
+        return Result.success("查询成功：" +user.toString());
     }
 }
+
+
+

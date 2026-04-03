@@ -26,7 +26,7 @@ public class UserController {
     // 3. 测试查询接口：GET /api/users/{id}（用于后续拦截器测试）
     @GetMapping("/{id}")
     public Result<String> getUser(@PathVariable("id") Long id) {
-        return Result.success("查询成功，正在返回ID为" + id + "的用户信息");
+        return userService.getUserById(id);
     }
 
 
