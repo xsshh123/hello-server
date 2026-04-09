@@ -29,6 +29,12 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @GetMapping("/page")
+    public Result<Object> getUserPage(
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "5") Integer pageSize) {
+        return userService.getUserPage(pageNum, pageSize);
+    }
 
 
 //    // 2. 增：新增用户 - 使用@RequestBody接收JSON请求体

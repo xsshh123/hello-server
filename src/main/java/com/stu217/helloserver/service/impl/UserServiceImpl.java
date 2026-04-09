@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import static com.stu217.helloserver.common.ResultCode.USER_NOT_EXIST;
 
@@ -71,6 +72,17 @@ public class UserServiceImpl implements UserService {
             return Result.error(USER_NOT_EXIST);
         }
         return Result.success("查询成功：" +user.toString());
+    }
+    @Override
+    public Result<Object> getUserPage(Integer pageNum, Integer pageSize) {
+        // 1. 创建分页对象：当前页、每页条数
+        Page<User> page = new Page<>(pageNum, pageSize);
+
+        // 2. 执行分页查询（null 表示无条件，查全部）
+        Page<User> resultPage = userMapper.selectPage(page, null);
+
+        // 3. 返回成功
+        return Result.success(resultPage);
     }
 }
 
