@@ -10,7 +10,8 @@ public class WebConfig implements WebMvcConfigurer {
             registry.addInterceptor(new AuthInterceptor()) // 注册自定义鉴权拦截器
                     .addPathPatterns("/api/**") // 拦截规则：/api下的所有请求（包括子路径）
                     .excludePathPatterns( // 放行规则：指定接口不拦截
-                            "/api/users/login"// 登录接口（核心放行，无需鉴权）
+                            "/api/users/login",// 登录接口（核心放行，无需鉴权）
+                            "/api/users/page"
                             //"/api/users/register"
                             //"/api/users"       // 新增用户接口（注册，无需鉴权）
                             //"/api/users/*" //放行：获取用户信息接口

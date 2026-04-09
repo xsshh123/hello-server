@@ -10,4 +10,5 @@ public interface UserService {
     // 用户登录方法
     Result<String> login(UserDTO userDTO);
     Result<String> getUserById(Long id);
+    Result<Object> getUserPage(Integer pageNum, Integer pageSize);
 }

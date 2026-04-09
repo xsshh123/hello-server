@@ -47,6 +47,12 @@
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
             <version>3.5.10</version>
         </dependency>
+        <!-- 必须额外添加的 JSQLParser 依赖，用于分页插件的 SQL 解析 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
+            <version>3.5.10</version> <!-- 版本号请与主依赖保持一致 -->
+        </dependency>
 
         <!-- PostgreSQL 驱动（你用的数据库）-->
         <dependency>
