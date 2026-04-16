@@ -5,6 +5,8 @@ import com.stu217.helloserver.dto.UserDTO;
 import com.stu217.helloserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.stu217.helloserver.vo.UserDetailVO;
+import com.stu217.helloserver.entity.UserInfo;
 
 
 @RestController // 标记为REST风格控制器
@@ -12,29 +14,53 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     private UserService userService;
-    @PostMapping
-    public Result<String> register(@RequestBody UserDTO userDTO) {
-        // 调用Service层的注册方法
-        return userService.register(userDTO);
-    }
-    // 2. 用户登录接口：POST /api/users/login
-    @PostMapping("/login")
-    public Result<String> login(@RequestBody UserDTO userDTO) {
-        // 调用Service层的登录方法
-        return userService.login(userDTO);
-    }
-    // 3. 测试查询接口：GET /api/users/{id}（用于后续拦截器测试）
-    @GetMapping("/{id}")
-    public Result<String> getUser(@PathVariable("id") Long id) {
-        return userService.getUserById(id);
+
+    // 查询详情（多表+Redis）
+    @GetMapping("/{id}/detail")
+    public Result<UserDetailVO> detail(@PathVariable Long id) {
+        return userService.getUserDetail(id);
     }
 
-    @GetMapping("/page")
-    public Result<Object> getUserPage(
-            @RequestParam(defaultValue = "1") Integer pageNum,
-            @RequestParam(defaultValue = "5") Integer pageSize) {
-        return userService.getUserPage(pageNum, pageSize);
+    // 更新详情
+    @PutMapping("/{id}/detail")
+    public Result<String> update(
+            @PathVariable Long id,
+            @RequestBody UserInfo userInfo) {
+        userInfo.setUserId(id);
+        return userService.updateUserInfo(userInfo);
     }
+
+    // 删除用户
+    @DeleteMapping("/{id}")
+    public Result<String> delete(@PathVariable Long id) {
+        return userService.deleteUser(id);
+    }
+
+
+
+//    @PostMapping
+//    public Result<String> register(@RequestBody UserDTO userDTO) {
+//        // 调用Service层的注册方法
+//        return userService.register(userDTO);
+//    }
+//    // 2. 用户登录接口：POST /api/users/login
+//    @PostMapping("/login")
+//    public Result<String> login(@RequestBody UserDTO userDTO) {
+//        // 调用Service层的登录方法
+//        return userService.login(userDTO);
+//    }
+//    // 3. 测试查询接口：GET /api/users/{id}（用于后续拦截器测试）
+//    @GetMapping("/{id}")
+//    public Result<String> getUser(@PathVariable("id") Long id) {
+//        return userService.getUserById(id);
+//    }
+//
+//    @GetMapping("/page")
+//    public Result<Object> getUserPage(
+//            @RequestParam(defaultValue = "1") Integer pageNum,
+//            @RequestParam(defaultValue = "5") Integer pageSize) {
+//        return userService.getUserPage(pageNum, pageSize);
+//    }
 
 
 //    // 2. 增：新增用户 - 使用@RequestBody接收JSON请求体

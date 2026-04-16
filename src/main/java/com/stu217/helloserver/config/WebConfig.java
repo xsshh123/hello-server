@@ -11,7 +11,10 @@ public class WebConfig implements WebMvcConfigurer {
                     .addPathPatterns("/api/**") // 拦截规则：/api下的所有请求（包括子路径）
                     .excludePathPatterns( // 放行规则：指定接口不拦截
                             "/api/users/login",// 登录接口（核心放行，无需鉴权）
-                            "/api/users/page"
+                            "/api/users/page",
+                            "/api/users/*",
+                            // 放行用户详情相关接口（修复401的核心）
+                            "/api/users/*/detail" // 匹配 /api/users/1/detail 这类二级路径
                             //"/api/users/register"
                             //"/api/users"       // 新增用户接口（注册，无需鉴权）
                             //"/api/users/*" //放行：获取用户信息接口
